@@ -6,7 +6,7 @@ task("dev", [], async () => {
   }
   let process = Deno.run(runOptions)
 
-  for await (const change of Deno.watchFs('src')) {
+  for await (const change of Deno.watchFs('src', { recursive: true })) {
     process.close()
     process = Deno.run(runOptions)
   }
