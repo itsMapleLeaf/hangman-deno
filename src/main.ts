@@ -3,12 +3,18 @@ import { Coward, Message, Options } from "../deps/coward.ts"
 import { config } from "../deps/dotenv.ts"
 import { HangmanGame } from "./hangman-game.ts"
 import { createMessageQueue } from "./message-queue.ts"
+import { raise } from "./raise.ts"
+
+try {
+  config({ safe: true, export: true })
+} catch { }
 
 log.info("Reading words...")
 const words: string[] = JSON.parse(await Deno.readTextFile(`${Deno.cwd()}/words.json`))
 
-const env = config({ safe: true }) // https://deno.land/x/dotenv#safe-mode
-const client = new Coward(env.DISCORD_TOKEN)
+const token = Deno.env.get('DISCORD_TOKEN') || raise("DISCORD_TOKEN environment variable is not configured")
+
+const client = new Coward(token)
 const queue = createMessageQueue(client)
 
 const games = new Map<string, HangmanGame>() // channel id -> game

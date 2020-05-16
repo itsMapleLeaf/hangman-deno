@@ -2,7 +2,7 @@ import { run, sh, task } from "https://deno.land/x/drake@v1.0.0/mod.ts"
 
 task("dev", [], async () => {
   const runOptions: Deno.RunOptions = {
-    cmd: ['deno', 'run', '--allow-read', '--allow-net', 'src/main.ts']
+    cmd: ['deno', 'run', '--allow-read', '--allow-net', '--allow-env', 'src/main.ts']
   }
   let process = Deno.run(runOptions)
 
@@ -15,7 +15,7 @@ task("dev", [], async () => {
 })
 
 task("start", [], async () => {
-  await sh('deno run --allow-read --allow-net src/main.ts')
+  await sh('deno run --allow-read --allow-net --allow-env src/main.ts')
 })
 
 run()
