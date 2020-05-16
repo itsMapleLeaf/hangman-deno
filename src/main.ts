@@ -7,7 +7,7 @@ import { createMessageQueue } from "./message-queue.ts"
 log.info("Reading words...")
 const words: string[] = JSON.parse(await Deno.readTextFile(`${Deno.cwd()}/words.json`))
 
-const env = config()
+const env = config({ safe: true }) // https://deno.land/x/dotenv#safe-mode
 const client = new Coward(env.DISCORD_TOKEN)
 const queue = createMessageQueue(client)
 
