@@ -5,16 +5,17 @@ import { HangmanGame } from "./hangman-game.ts"
 import { createMessageQueue } from "./message-queue.ts"
 
 log.info("Reading words...")
-const words: string[] = JSON.parse(await Deno.readTextFile('words.json'))
+const words: string[] = JSON.parse(await Deno.readTextFile(`${Deno.cwd()}/words.json`))
 
 const env = config()
 const client = new Coward(env.DISCORD_TOKEN)
-
-// channel id -> game
-const games = new Map<string, HangmanGame>()
 const queue = createMessageQueue(client)
 
+const games = new Map<string, HangmanGame>() // channel id -> game
+
 client.on("ready", () => {
+  log.info("Ready")
+
   client.modifyPresence({
     game: {
       name: '.hangman',
