@@ -82,7 +82,7 @@ client.on("messageCreate", (message: Message) => {
   }
 
   const game = games.get(message.channel.id)
-  if (game && content.length === 1) {
+  if (game && /^[a-z]$/i.test(content)) {
     if (game.guessedLetters.has(content)) {
       replyMention('already-guessed', "that letter was already guessed!")
       return
