@@ -7,23 +7,30 @@ type QueuedMessage = {
   content: string | Options.postMessage
 }
 
-const queueDelay = 800
+const queueDelay = 1000
 
 export function createMessageQueue(client: Coward) {
   const messageQueue: Array<QueuedMessage> = []
-  let lastSentTime = Date.now()
+  let running = false
 
   async function sendMessage(message: QueuedMessage) {
     if (messageQueue[messageQueue.length - 1]?.key === message.key) {
       messageQueue.pop()
     }
     messageQueue.push(message)
+    run()
+  }
 
-    // wait until it's been [queueDelay] ms before sending new messages
-    await delay(Math.max((lastSentTime + queueDelay) - Date.now(), 0))
+  async function run() {
+    if (running) return
+    running = true
 
-    for (const { channelId, content } of messageQueue) {
-      client.postMessage(channelId, content)
+    while (true) {
+      const entry = messageQueue.shift()
+      if (entry) {
+        client.postMessage(entry.channelId, entry.content)
+      }
+      await delay(queueDelay)
     }
   }
 
