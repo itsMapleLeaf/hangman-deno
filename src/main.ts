@@ -3,10 +3,7 @@ import { Coward, Message, Options } from "../deps/coward.ts"
 import { config } from "../deps/dotenv.ts"
 import { HangmanGame } from "./hangman-game.ts"
 import { createMessageQueue } from "./message-queue.ts"
-
-log.info("Reading words...")
-console.log(`${Deno.cwd()}/words.json`)
-const words: string[] = JSON.parse(await Deno.readTextFile(`${Deno.cwd()}/words.json`))
+import { words } from "./words.ts"
 
 const env = config()
 const client = new Coward(env.DISCORD_TOKEN)
