@@ -1,10 +1,16 @@
 import { run, sh, task } from "https://deno.land/x/drake@v1.0.0/mod.ts"
 
 task("dev", [], async () => {
-  await sh('drun --entryPoint=src/main.ts --cwd=./')
-})
+  const runOptions: Deno.RunOptions = {
+    cmd: ['deno', 'run', '--allow-read', '--allow-net', 'src/main.ts']
+  }
+  let process = Deno.run(runOptions)
 
-task("dev", [], async () => {
+  for await (const change of Deno.watchFs('src')) {
+    process.close()
+    process = Deno.run(runOptions)
+  }
+
   await sh('drun --entryPoint=src/main.ts --cwd=./')
 })
 
