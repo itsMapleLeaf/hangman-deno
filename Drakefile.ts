@@ -17,8 +17,6 @@ task("dev", [], async () => {
     process.close()
     process = Deno.run(runOptions)
   }
-
-  await sh("drun --entryPoint=src/main.ts --cwd=./")
 })
 
 task("start", [], async () => {
