@@ -1,16 +1,13 @@
 export class HangmanGame {
   readonly guessedLetters = new Set<string>()
 
-  constructor(
-    readonly word: string,
-    private readonly totalLives = 10,
-  ) {}
+  constructor(readonly word: string, private readonly totalLives = 10) {}
 
   get remainingLives() {
     // prettier-ignore
     const guessedLettersNotInWord = [...this.guessedLetters]
       .filter((letter) => !this.word.includes(letter))
-      .length
+      .length;
 
     return this.totalLives - guessedLettersNotInWord
   }
@@ -22,7 +19,7 @@ export class HangmanGame {
   }
 
   get hasWon() {
-    return [...this.word].every(letter => this.guessedLetters.has(letter))
+    return [...this.word].every((letter) => this.guessedLetters.has(letter))
   }
 
   guess(letter: string) {

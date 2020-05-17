@@ -7,12 +7,16 @@ import { raise } from "./raise.ts"
 
 try {
   config({ safe: true, export: true })
-} catch { }
+} catch {}
 
 log.info("Reading words...")
-const words: string[] = JSON.parse(await Deno.readTextFile(`${Deno.cwd()}/words.json`))
+const words: string[] = JSON.parse(
+  await Deno.readTextFile(`${Deno.cwd()}/words.json`),
+)
 
-const token = Deno.env.get('DISCORD_TOKEN') || raise("DISCORD_TOKEN environment variable is not configured")
+const token =
+  Deno.env.get("DISCORD_TOKEN") ||
+  raise("DISCORD_TOKEN environment variable is not configured")
 
 const client = new Coward(token)
 const queue = createMessageQueue(client)
@@ -22,13 +26,14 @@ const games = new Map<string, HangmanGame>() // channel id -> game
 client.on("ready", () => {
   log.info("Ready")
 
-  client.modifyPresence({
-    game: {
-      name: '.hangman',
-      type: 2 // "listening to"
-    },
-    status: 'online'
-  })
+  client
+    .modifyPresence({
+      game: {
+        name: ".hangman",
+        type: 2, // "listening to"
+      },
+      status: "online",
+    })
     .then(() => log.info("Status updated"))
     .catch((error) => log.error("Could not update status", error))
 })
@@ -44,54 +49,57 @@ client.on("messageCreate", (message: Message) => {
 
   function showPostGuessResult(game: HangmanGame) {
     if (game.remainingLives < 1) {
-      replyMention('loser', `sorry, you lost :( the word was ${game.word}`)
+      replyMention("loser", `sorry, you lost :( the word was ${game.word}`)
       games.delete(message.channel.id)
       return
     }
 
     if (game.hasWon) {
-      replyMention('winner', `you win! the word was ${game.word}`)
+      replyMention("winner", `you win! the word was ${game.word}`)
       games.delete(message.channel.id)
       return
     }
 
     const embedFields = [
-      { name: 'Word', value: game.wordProgress },
-      { name: 'Lives Remaining', value: String(game.remainingLives) },
+      { name: "Word", value: game.wordProgress },
+      { name: "Lives Remaining", value: String(game.remainingLives) },
     ]
 
     if (game.guessedLetters.size > 0) {
       embedFields.push({
-        name: 'Guessed Letters',
-        value: [...game.guessedLetters].join(', '),
+        name: "Guessed Letters",
+        value: [...game.guessedLetters].join(", "),
       })
     }
 
-    reply('game-progress', {
+    reply("game-progress", {
       embed: {
-        fields: embedFields
+        fields: embedFields,
       },
     })
   }
 
   const content = message.content.trim()
 
-  if (content === '.hangman') {
+  if (content === ".hangman") {
     if (!games.has(message.channel.id)) {
       const word = words[Math.floor(Math.random() * words.length)]
       const game = new HangmanGame(word, 10)
       games.set(message.channel.id, game)
-      replyMention('new-game', "new game! type a single letter to guess")
+      replyMention("new-game", "new game! type a single letter to guess")
       showPostGuessResult(game)
     } else {
-      replyMention('game-running', "game already running! type a single letter to guess")
+      replyMention(
+        "game-running",
+        "game already running! type a single letter to guess",
+      )
     }
   }
 
   const game = games.get(message.channel.id)
   if (game && /^[a-z]$/i.test(content)) {
     if (game.guessedLetters.has(content)) {
-      replyMention('already-guessed', "that letter was already guessed!")
+      replyMention("already-guessed", "that letter was already guessed!")
       return
     }
 
@@ -100,8 +108,8 @@ client.on("messageCreate", (message: Message) => {
   }
 })
 
-client.on('error', (error: any) => {
-  log.error('an error occurred', error)
+client.on("error", (error: any) => {
+  log.error("an error occurred", error)
 })
 
 client.connect()
