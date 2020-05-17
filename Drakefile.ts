@@ -25,4 +25,8 @@ task("start", [], async () => {
   await sh("deno run --allow-read --allow-net --allow-env src/main.ts")
 })
 
+task("format", [], async () => {
+  await sh("prettier --write .")
+})
+
 run()
