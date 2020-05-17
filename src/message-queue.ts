@@ -1,5 +1,5 @@
 import { delay } from "https://deno.land/std/async/delay.ts"
-import { Coward, Options } from "../deps/coward.ts"
+import { Coward, Options } from "./coward.ts"
 
 type QueuedMessage = {
   key: string
