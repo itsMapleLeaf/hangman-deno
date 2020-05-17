@@ -1,6 +1,6 @@
 import * as log from "https://deno.land/std/log/mod.ts"
-import { Coward, Message, Options } from "../deps/coward.ts"
-import { config } from "../deps/dotenv.ts"
+import { config } from "https://deno.land/x/dotenv/mod.ts"
+import { Coward, Message, Options } from "./coward.ts"
 import { HangmanGame } from "./hangman-game.ts"
 import { createMessageQueue } from "./message-queue.ts"
 import { raise } from "./raise.ts"

@@ -1,4 +1,4 @@
-import { assertEquals } from "../deps/asserts.ts"
+import { assertEquals } from "./asserts.ts"
 import { HangmanGame } from "./hangman-game.ts"
 
 Deno.test("remainingLives", () => {
