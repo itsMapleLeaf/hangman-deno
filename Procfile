@@ -1,1 +1,1 @@
-worker: deno run -A Drakefile.ts start
+worker: SHELL=bash deno run -A Drakefile.ts start
