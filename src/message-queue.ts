@@ -1,5 +1,5 @@
 import { delay } from "https://deno.land/std/async/delay.ts"
-import { Coward, Options } from "./coward.ts"
+import { Client, Options } from "./coward.ts"
 
 type QueuedMessage = {
   key: string
@@ -9,7 +9,7 @@ type QueuedMessage = {
 
 const queueDelay = 1000
 
-export function createMessageQueue(client: Coward) {
+export function createMessageQueue(client: Client) {
   const messageQueue: Array<QueuedMessage> = []
   let running = false
 
